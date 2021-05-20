@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form>
+    <p>
+      <label for="search">search</label>
+      <input type="text" name="search" id="search">
+    </p>
+    <p>
+      <button id="searchAnime">Search Anime</button>
+    </p>
+  </form>
+  <div id="anime"></div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    document.getElementById('searchAnime').addEventListener('click', event => {
+      event.preventDefault()
+
+      axios.get(`https://kitsu.io/api/edge/anime?filter[text]=${document.getElementById('search').value}`)
+      .then(res => {
+        let anime = res.data.data
+        console.log(anime)
+        for (let i = 0; i < anime.length; i++) {
+          document.getElementById('anime').innerHTML += `
+          <h1>English Title: ${anime[i].attributes.titles.en}</h1>
+          <h1>Japanese Title: ${anime[i].attributes.titles.ja_jp}</h1>
+          <img src="${anime[i].attributes.posterImage.tiny}" alt="${anime[i].attributes.titles.en}" />
+        `
+        }
+        document.getElementById('search').value = ''
+      })
+      .catch(err => console.error(err))
+    })
+  </script>
+</body>
+
+</html>
